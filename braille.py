@@ -443,10 +443,10 @@ def convert(line):
     word = new_word
 
     for (p, b) in st_punct:
-      word = re.sub(r'^([^\w]*)%s' % p, '\1%s' % b, word)
+      word = re.sub(r'^([^\w]*)%s' % p, r'\1%s' % b, word)
 
     for (p, b) in cl_punct:
-      word = re.sub(r'%s([^\w]*)$' % p, '%s\1' % b, word)
+      word = re.sub(r'%s([^\w]*)$' % p, r'%s\1' % b, word)
 
     #punctuation
     #TODO: Handle opening/closing quotes correctly
