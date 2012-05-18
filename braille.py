@@ -1,4 +1,4 @@
-#!/usr/bin/python 
+#!/usr/bin/env python
 #to-braille - converts text to English Braile. encoding=utf8
 
 import sys, re
