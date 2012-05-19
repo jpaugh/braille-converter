@@ -3,6 +3,8 @@
 
 import sys, re
 
+version = (0, 1, 0, 2002, 'beta')
+
 def dot(s):
   '''
   convert a string of "dots" to a braille character.
