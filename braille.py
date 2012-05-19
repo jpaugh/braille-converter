@@ -7,7 +7,7 @@ def dot(s):
   '''
   convert a string of "dots" to a braille character.
 
-  Does not expect multiple characters to be described by the dots. 
+  Does not expect multiple characters to be described by the dots.
   DOES work for 8bit dots (i.e. European Braille).
   '''
   if type(s) == int:
@@ -83,6 +83,54 @@ letters.extend((
   ('y', dot(patt[3]*100 + 36)),
   ('z', dot(patt[4]*100 + 36)),
   ))
+
+'''
+Punctuation - This area of Braille presents the greatest opportunity for
+error. In particular, we must attempt to determine the beginning and
+ending of quotations, as well as whether each (') is a quote or an
+apostrophe, while numerous semantic considerations are beyond the
+purview of any machine algorithm, and can only be groped at
+heuristically at best. This is not the only source of semantic woes, but
+along with formatting guidelines, it represents one of the worst
+contributers.
+'''
+#punctuation that occurs only at the start of a word
+st_punct = (
+    ("'", dots('6 236')),
+    ('"', dot(236)),
+    )
+
+#punctuation that occurs only at the end of a word
+cl_punct = (
+    ("'", dots('356 3')),
+    ('"', dot(356)),
+    )
+
+punctuation = (
+    (',', dot(2)),
+    (';', dot(23)),
+    (':', dot(25)),
+    ('...', brl.apostrophe * 3),
+    ('.', dot(256)),
+    ('!', dot(235)),
+    ('[', dot(6) + ')'),
+    (']', ')' + dot(3)),
+    ('(', ')'),
+    (')', dot(2356)),
+    ('?', dot(236)),
+    ('*', dot(35) *2),
+    ('/', dot(34)),
+    #Catch a pair of quotes
+    ('""', dots('236 356')),
+    #Assume it's an opening quote
+    ('"', dot(236)),
+    #Catch a pair of quotes
+    ("''", dots('6 236 356 3')),
+    #All remaining 's assumed to be apostrophes
+    ("'", brl.apostrophe),
+    ('-', dot(36)),
+    #XXX: Lacking: ditto sign
+    )
 
 '''
 The letters and punctuation form the entirety of Uncontracted (Grade 1)
@@ -168,7 +216,7 @@ contraction, we do not need to list the contracted form.  However, some
 words require special care, because they are abreviated by a cell which
 represents multiple English letters. These use a number in stead of
 their initial letter, indicating how many letters to preserve.
-Eventually, these letter groups will be contracted to their final form. 
+Eventually, these letter groups will be contracted to their final form.
 '''
 
 init_letter = (
@@ -217,7 +265,7 @@ init_letter = (
 Final letter contractions - These are formed much as the initial letter
 contractions, except that the prefix is followed by the final letter of
 the expanded form, instead of the inital. Also, there are no final forms
-using multiple letters, so no embedded counts are needed. 
+using multiple letters, so no embedded counts are needed.
 '''
 
 final_letter = (
@@ -389,7 +437,7 @@ def convert(line):
     return line
 
   line = unicode(line).strip()
-  
+
   for i in xrange(len(line)):
     c = ord(line[i])
     if c >= ord('A') and c <= ord('Z'):
@@ -397,6 +445,19 @@ def convert(line):
       line = line[:i] + brl.capital + C + line[i+1:]
 
   for word in line.split():
+    #punctuation
+    #opening quotes
+    for (p, b) in st_punct:
+      word = re.sub(r'^([^\w]*)%s(\W*\w+)' % p, r'\1%s\2' % b, word)
+
+    #closing quotes
+    for (p, b) in cl_punct:
+      word = re.sub( r'(\w+\W*)%s(\W*)$' % p, r'\1%s\2' % b, word)
+
+    #other punctuation
+    for (p, b) in punctuation:
+      word = word.replace(p,b)
+	
     #Short forms
     for (lf, sf) in short_forms:
       word = word.replace(lf, sf)
@@ -446,17 +507,6 @@ def convert(line):
 	new_word += c
     word = new_word
 
-    for (p, b) in st_punct:
-      word = re.sub(r'^([^\w]*)%s' % p, r'\1%s' % b, word)
-
-    for (p, b) in cl_punct:
-      word = re.sub(r'%s([^\w]*)$' % p, r'%s\1' % b, word)
-
-    #punctuation
-    #TODO: Handle opening/closing quotes correctly
-    for (p, b) in punctuation:
-      word = word.replace(p,b)
-	
     #letters
     for (c, b) in letters:
       word = word.replace(c, b)
