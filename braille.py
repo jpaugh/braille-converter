@@ -382,48 +382,6 @@ one_cell_parts = (
     ('com', dot('  3  6')),
     )
 
-'''
-Punctuation - This area of Braille presents the greatest opportunity for
-error. In particular, we must attempt to determine the beginning and
-ending of quotations, as well as whether each (') is a quote or an
-apostrophe, while numerous semantic considerations are beyond the
-purview of any machine algorithm, and can only be groped at
-heuristically at best. This is not the only source of semantic woes, but
-along with formatting guidelines, it represents one of the worst
-contributers.
-'''
-#punctuation that occurrs only at the start of a word
-st_punct = (
-    ("'", brl.apostrophe + '"'),
-    ('"', dot(236)),
-    )
-
-#punctuation that occurrs only at the end of a word
-cl_punct = (
-    ("'", '"' + brl.apostrophe),
-    ('"', dot(356)),
-    )
-
-punctuation = (
-    (',', dot(2)),
-    (';', dot(23)),
-    (':', dot(25)),
-    ('...', brl.apostrophe * 3),
-    ('.', dot(256)),
-    ('!', dot(236)),
-    ('[', dot(6) + ')'),
-    (']', ')' + dot(3)),
-    ('(', ')'),
-    (')', dot(2356)),
-    ('?', dot(236)),
-    ('*', dot(35) *2),
-    ('/', dot(34)),
-    #All remaining 's assumed to be apostrophes
-    ("'", brl.apostrophe),
-    ('-', dot(36)),
-    #XXX: Lacking: ditto sign
-    )
-
 def convert(line):
   '''
   converts a line of English (ASCII) text to Braille. For more
