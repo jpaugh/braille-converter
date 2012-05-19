@@ -439,7 +439,8 @@ def convert(line):
     #XXX: Doesn't exclude situations that allow compound words.
     #TODO: Find out if the above is actually necessary.
     for (oc, sf) in one_cell_words:
-      word = word.replace(oc, sf)
+      #print 'word, oc, sf: %s, %s, %s' % (word, oc, sf)
+      word = re.sub(r'\b%s\b' % oc, sf, word)
 
     #one cell parts (can be stand-alone as well)
     for (oc, sf) in one_cell_parts:
