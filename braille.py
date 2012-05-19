@@ -388,7 +388,7 @@ def convert(line):
   information, consult the comments interspersed with the data
   structures, above.
   '''
-  res = ''
+  res = []
 
   #Ignore silliness, vagueness, and wanton emptiness
   if not line:
@@ -469,13 +469,9 @@ def convert(line):
     for (c, b) in letters:
       word = word.replace(c, b)
 
-    #Add a hair-space between cells; helps readablity
-    #XXX This is only a problem for monospace fonts
-    #word = word.replace('', unichr(0x200A))
+    res.append(word)
 
-    res += " " + word
-
-  return res
+  return ' '.join(res)
 
 
 
