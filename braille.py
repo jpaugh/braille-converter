@@ -24,11 +24,15 @@ def dots(s):
   '''
   convert a sequence of Braille dot patterns (string) to the
   corresponding Braille characters. NOTE: The dots for each cell must be
-  separated by whitespace.
+  separated by a single space. To include a literal space, use two dots
+  instead.
   '''
   res = ''
-  for word in s.split():
-    res += dot(word)
+  for word in s.split(' '):
+    if word:
+      res += dot(word)
+    else:
+      res += ' '
 
   return res
 
