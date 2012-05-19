@@ -14,6 +14,22 @@ usability is a major aim: if you can't figure out how to use it, hang
 tight until I get a simpler-to-use version released. And, yes, I do
 intend to add a *graphical* interface.
 
+# What's the difference between this program and online Braille converter X?
+
+Many of the Braille converters online use what is called Grade 1 Braille, 
+which consists of the alphabetical characters, and maybe some punctuation.
+However, there is a much more powerful version, called Grade 2, or 
+Contracted Braille. Contracted Braille empowers blind readers to read more 
+quiclky. This is important because reading by touch is much slower than 
+reading by sight.
+
+braille-converter supports Grade 2 Braille, in a limited form which will 
+improve as the project progresses. It is already very usable, and aims to
+support advanced features--I bet you won't find better handling of single
+quotes and apostrophes! By the way, it uses American English Braille, and 
+is coded according to the 2002 *English Braille: American Edition* released 
+by the *Braille Authority of North America*.
+
 # How to use
 
 Using it is as easy as pie, but it does require that you have Python
@@ -45,7 +61,7 @@ and receive the Braille text in return
 
 So, import for `5 * 'fun'`.
 
-##What are dots? 
+##What are dots?
 
 Dots is a notation often used to succinctly describe Braille cells
 without having to print them. Braille cells consist 6 dots, arranged in
