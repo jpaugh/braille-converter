@@ -5,6 +5,181 @@ import sys, re
 
 version = (0, 1, 0, 2002, 'beta')
 
+class T:
+  abbrev = 'abbrev'
+  accent = 'accent'
+  bpunct = 'bpunct'
+  capital = 'capital'
+  char = 'char'
+  cluster = 'cluster'
+  decimal = 'decimal'
+  epunct = 'epunct'
+  italic = 'italic'
+  letter = 'letter'
+  mpunct = 'mpunct'
+  nonlatin = 'nonlatin'
+  number = 'number'
+  prefix = 'prefix'
+  punct = 'punct'
+  wcell = 'wcell'
+  unknown = None
+
+  '''
+  list of types considered as "words"
+  '''
+  words = ( abbrev, char, cluster,
+	    decimal, number, nonlatin,
+	    prefix, wcell,
+	  )
+
+def warn(msg):
+  '''
+  Give a warning to the user on stderr
+  '''
+  print >>sys.stderr, msg
+  sys.stderr.flush()
+
+def fwarn(cxt, msg):
+  '''
+  Give a warning with file context information
+  '''
+  warn('%s/%d: %s' % (cxt.fname, cxt.lineno, msg))
+
+def do_re(reg, s):
+  '''
+  Match a regex against a string, returning None or the matching dict.
+  '''
+  match = reg.match(s)
+  if match:
+    return match.groupdict()
+  else:
+    return None
+
+
+def import_language(lang):
+  '''
+  loads the rules for the given language
+  '''
+  import os
+  lang = lang.replace('_', '-')
+
+  #Import standard (international) rules first
+  if not lang == 'standard':
+    rules = import_language('standard')
+  else:
+    rules = []
+
+  class Context: pass
+  cxt = Context()
+  cxt.fname = os.path.join('lang', lang)
+  cxt.lineno = 0
+
+  try:
+    with open(cxt.fname) as lfile:
+      for rule in lfile:
+	cxt.lineno += 1
+	r = parse_rule(cxt, rule)
+	if r:
+	  rules.append(r)
+  except IOError as e:
+    raise
+
+  rules.sort(cmp=cmp_rules)
+  return rules
+
+
+def parse_rule(cxt, rule):
+  '''
+  parse a string into a rule tuple
+  '''
+  rule = rule.strip()
+  if (not rule) or rule[0] == '#':
+    return None
+  match = do_re(patt.rule, rule)
+  if not match:
+    fwarn(cxt, 'Invalid Rule "%s"' % rule)
+    return None
+  typ = match['type'].lower()
+
+  if not typ in types:
+    fwarn(cxt, 'Unknown rule type: '+typ)
+    return None
+
+  match['type'] = typ
+  if not match['priority']:
+    match['priority'] = 1
+  return match
+
+
+def cmp_rules(x, y):
+  '''
+  cmp function for the rules.
+  '''
+  if types[x['type']] < types[y['type']]:
+    return -1
+  elif types[x['type']] > types[y['type']]:
+    return 1
+  elif x['priority'] < y['priority']:
+    return -1
+  elif x['priority'] > y['priority']:
+    return 1
+  else:
+    # Longer strings first
+    return -1 * cmp(len(x['prn']), len(y['prn']))
+
+class patt:
+  #Match a lang rule
+  rule = re.compile(flags=re.X,
+      pattern='''(?P<type>[^\s]+)\s+  #type
+      ("|\')(?P<prn>[^\\2]*)\\2\s+    #"print"	 (match string)
+      ("|\')(?P<brl>[^\\4]*)\\4	      #"braille" (substitution string)
+      (?:\s+(?P<priority>\d+))?''')   # 1 (rule priority)
+
+  #Match a valid dots pattern, with trailling garbage ignored
+  dots = re.compile(flags=re.X, pattern='(\\d+\\s*)+')
+
+  #Match the brl for a prefix, which is hybrid
+  prefix = re.compile(flags=re.X,
+      pattern='''(?P<dots>(\\d+\\s+)+)  #dots
+      (?P<word>.*)''')		      # word (ascii)
+
+  #Match the first token
+  token = re.compile(flags=re.X,
+      pattern='''([A-Za-z-]+  #Word
+      |(?:[0-9]*\\.)[0-9]+  #Number
+      |\\s+		    #Whitespace
+      |.)''')		    #Any single char
+
+  #Match /only/ whitespace
+  space = re.compile(pattern='^\s+$')
+
+
+#Type info
+#   order: sort order
+#   reduce: fun to reduce the brl of any rule of this type
+#   parse:  parsing strategy (function) for when this rule matches
+types = {
+  T.bpunct  : { 'order' :  0, 'parse' : fun },
+  T.epunct  : { 'order' :  1, 'parse' : fun },
+  T.mpunct  : { 'order' :  2, 'parse' : fun },
+  T.decimal : { 'order' :  3, 'parse' : fun },
+  T.punct   : { 'order' :  4, 'parse' : fun },
+  T.capital : { 'order' :  5, 'parse' : fun },
+  T.prefix  : { 'order' :  6, 'parse' : fun },
+  T.abbrev  : { 'order' :  7, 'parse' : fun },
+  T.wcell   : { 'order' :  8, 'parse' : fun },
+  T.cluster : { 'order' :  9, 'parse' : fun },
+  T.number  : { 'order' : 10, 'parse' : fun },
+  T.letter  : { 'order' : 11, 'parse' : fun },
+  T.nonlatin: { 'order' : 12, 'parse' : fun },
+  T.char    : { 'order' : 13, 'parse' : fun },
+  T.accent  : { 'order' : -1, 'parse' : fun },
+  T.italic  : { 'order' : -1, 'parse' : fun },
+  T.space   : { 'order' : -1, 'parse' : fun },
+  T.unknown : { 'order' : -1, 'parse' : None },
+}
+
+
 def dot(s):
   '''
   convert a string of "dots" to a braille character.
@@ -22,6 +197,7 @@ def dot(s):
 
   return unichr(num)
 
+
 def dots(s):
   '''
   convert a sequence of Braille dot patterns (string) to the
@@ -38,53 +214,6 @@ def dots(s):
 
   return res
 
-class brl:
-  '''
-  Assortment of string constants, each of which is a Braille cell.
-  Unlike the other strings, these do not correspond to Latin letters, or
-  the numerals.
-  '''
-  capital = dot(6)
-  apostrophe = dot(3)
-  number = dot(3456)
-  letter = dot(56)
-
-'''
-Braille letters follow this pattern, which I want to take advantage of
-to avoid data entry. :-) Every row (ten letters) of Braille repeats the
-pattern, making a prescribed change to distinguish each set of 10.
-Row 1 uses neither dot 3 or dot 6; Row 2 adds dot 3, Row 3 adds dot 6 to
-the second row, and Row 3 omits dot 3. These three rows take us through
-the alphabet--excepting w which was added to Braille as an afterthought.
-'''
-patt = (1, 12, 14, 145, 15, 124, 1245, 125, 24, 245)
-
-letters = []
-
-#for letters a to j
-for i in range(10):
-  b = dot(patt[i])
-  c = chr(i+ord('a'))
-  letters.append((c, b))
-
-#for letters k to t
-for i in range(10):
-  b = dot(patt[i] * 10 + 3)
-  c = chr(i+ord('k'))
-  letters.append((c, b))
-
-#Keep a tidy import
-del b, i, c
-
-#for letters u to z; this is sufficiently messed up that I do it by hand.
-letters.extend((
-  ('u', dot(patt[0]*100 + 36)),
-  ('v', dot(patt[1]*100 + 36)),
-  ('w', dot(patt[9]*100 + 6)),
-  ('x', dot(patt[2]*100 + 36)),
-  ('y', dot(patt[3]*100 + 36)),
-  ('z', dot(patt[4]*100 + 36)),
-  ))
 
 '''
 Punctuation - This area of Braille presents the greatest opportunity for
@@ -96,43 +225,6 @@ heuristically at best. This is not the only source of semantic woes, but
 along with formatting guidelines, it represents one of the worst
 contributers.
 '''
-#punctuation that occurs only at the start of a word
-st_punct = (
-    ("'", dots('6 236')),
-    ('"', dot(236)),
-    )
-
-#punctuation that occurs only at the end of a word
-cl_punct = (
-    ("'", dots('356 3')),
-    ('"', dot(356)),
-    )
-
-punctuation = (
-    (',', dot(2)),
-    (';', dot(23)),
-    (':', dot(25)),
-    ('...', brl.apostrophe * 3),
-    ('.', dot(256)),
-    ('!', dot(235)),
-    ('[', dot(6) + ')'),
-    (']', ')' + dot(3)),
-    ('(', ')'),
-    (')', dot(2356)),
-    ('?', dot(236)),
-    ('*', dot(35) *2),
-    ('/', dot(34)),
-    #Catch a pair of quotes
-    ('""', dots('236 356')),
-    #Assume it's an opening quote
-    ('"', dot(236)),
-    #Catch a pair of quotes
-    ("''", dots('6 236 356 3')),
-    #All remaining 's assumed to be apostrophes
-    ("'", brl.apostrophe),
-    ('-', dot(36)),
-    #XXX: Lacking: ditto sign
-    )
 
 '''
 The letters and punctuation form the entirety of Uncontracted (Grade 1)
@@ -159,55 +251,6 @@ the left and the contraction on the right. Keep in mind that some of
 these will be contracted further by later processes--ex: con and ch are
 contracted to one-cell forms.
 '''
-short_forms = (
-    ('braille', 'brl'),
-    ('children', 'chn'),
-    ('conceive', 'concv'),
-    ('could', 'cd'),
-    ('deceive', 'dcv'),
-    ('declare', 'dcl'),
-    ('either', 'ei'),
-    ('first', 'fst'),
-    ('friend', 'fr'),
-    ('good', 'gd'),
-    ('great', 'grt'),
-    ('herself', 'herf'),
-    ('himself', 'hmf'),
-    ('him', 'hm'),
-    ('immediate', 'imm'),
-    ('itself', 'itf'),
-    ('letter', 'lr'),
-    ('little', 'll'),
-    ('much', 'mch'),
-    ('must', 'mst'),
-    ('myself', 'myf'),
-    ('necessary', 'nec'),
-    ("o'clock", 'o' + brl.apostrophe + 'c'),
-    ('oneself', 'onef'),
-    ('ourselves', 'ourvs'),
-    ('paid', 'pd'),
-    ('perceive', 'percv'),
-    ('perhaps', 'perh'),
-    ('quick', 'qk'),
-    ('receive', 'rcv'),
-    ('rejoice', 'rjc'),
-    ('said', 'sd'),
-    ('should', 'shd'),
-    ('such', 'sch'),
-    ('themselves', 'themvs'),
-    ('thyself', 'thyf'),
-    ('today', 'td'),
-    ('to-day', 'td'),
-    ('together', 'tgr'),
-    ('tomorrow', 'tm'),
-    ('to-morrow', 'tm'),
-    ('tonight', 'tn'),
-    ('to-night', 'tn'),
-    ('would', 'wd'),
-    ('yourselves', 'yrvs'),
-    ('yourself', 'yrf'),
-    ('your', 'yr'),
-    )
 
 '''
 Initial Letter contractions - Some words are abbreviated by prefixing
@@ -221,48 +264,6 @@ their initial letter, indicating how many letters to preserve.
 Eventually, these letter groups will be contracted to their final form.
 '''
 
-init_letter = (
-    ( dot('5'), (
-      'day',
-      'ever',
-      'father',
-      'know',
-      'lord',
-      'mother',
-      'name',
-      'one',
-      'part',
-      'question',
-      'right',
-      'some',
-      'time',
-      'under',
-      'work',
-      'young',
-      '3there',
-      '2character',
-      '2through',
-      '2where',
-      'here',
-      '2ought',
-      )),
-    ( dot('45'), (
-      'upon',
-      'word',
-      '3these',
-      '2those',
-      '2whose',
-      )),
-    ( dot('456'), (
-      'cannot',
-      'had',
-      'many',
-      'spirit',
-      'world',
-      '3their',
-      )),
-    )
-
 '''
 Final letter contractions - These are formed much as the initial letter
 contractions, except that the prefix is followed by the final letter of
@@ -270,75 +271,15 @@ the expanded form, instead of the inital. Also, there are no final forms
 using multiple letters, so no embedded counts are needed.
 '''
 
-final_letter = (
-    ( dot('46'), (
-      'ound',
-      'ance',
-      'sion',
-      'less',
-      'ount',
-      )),
-    ( dot('56'), (
-      'ence',
-      'ong',
-      'ful',
-      'tion',
-      'ness',
-      'ment',
-      'ity',
-      )),
-    ( dot('6'), (
-      'ation',
-      'ally',
-      )),
-    )
-
 '''
 One cell words - A select few words can be contracted to a single
-cell, which disambiguation left up to the reader. Since this can be
+cell, with disambiguation left up to the reader. Since this can be
 quite confusing, one might assume that these contractions cannot be used
 within a word, as are the part-word contractions, defined below.
 However, I have not found a rule for this, and at least some of these
 abbreviations (e.g. X=it) are acceptable either as a separate word, or
 as a part-word contraction.
 '''
-one_cell_words = (
-    ('but', 'b'),
-    ('can', 'c'),
-    ('do', 'd'),
-    ('every', 'e'),
-    ('from', 'f'),
-    ('go', 'g'),
-    ('have', 'h'),
-    ('just', 'j'),
-    ('knowledge', 'k'),
-    ('like', 'l'),
-    ('more', 'm'),
-    ('not', 'n'),
-    ('people', 'p'),
-    ('quite', 'q'),
-    ('rather', 'r'),
-    ('so', 's'),
-    ('that', 't'),
-    ('us', 'u'),
-    ('very', 'v'),
-    ('will', 'w'),
-    ('it', 'x'),
-    ('you', 'y'),
-    ('as', 'z'),
-
-    ('shall', 'sh'),
-    ('this', 'th'),
-    ('which', 'wh'),
-    ('out', 'ou'),
-    ('enough', 'en'),
-    ('to', 'ff'),
-    ('were', 'gg'),
-    ('his', dot(' 23  6')),
-    ('into', 'inff'),
-    ('was', 'by'),
-    ('still', 'st'),
-    )
 
 '''
 One cell part-words - These contractions may occur as part of a word, or
@@ -348,41 +289,6 @@ a word or alone. These must be encoded directly to Braille, as we are at
 the last stage of contraction, followed by simple one-to-one substitutions
 (i.e. Grade 1 Braille.)
 '''
-
-one_cell_parts = (
-    ('and', dot('1234 6')),
-    ('for', dot('123456')),
-    ('of',  dot('123 56')),
-    ('the', dot(' 234 6')),
-    # with == wxh
-    ('wxh',dot(' 23456')),
-    ('ch',  dot('1    6')),
-    ('gh',  dot('12   6')),
-    ('sh',  dot('1  4 6')),
-    ('th',  dot('1  456')),
-    ('wh',  dot('1   56')),
-    ('ed',  dot('12 4 6')),
-    ('er',  dot('12 456')),
-    ('ou',  dot('12  56')),
-    ('ow',  dot(' 2 4 6')),
-    ('ea',  dot(' 2')),
-    ('be',  'bb'),
-    ('bb',  dot(' 23')),
-    ('con', 'cc'),
-    ('cc',  dot(' 2  5')),
-    ('dis', 'dd'),
-    ('dd',  dot(' 2  56')),
-    ('en',  dot(' 2   6')),
-    ('ff',  dot(' 23 5')),
-    ('gg',  dot(' 23 56')),
-    ('ing', dot('  34 6')),
-    ('in',  dot('  3 5')),
-    ('by',  dot('  3 56')),
-    ('st',  dot('  34')),
-    ('ble', dot('  3456')),
-    ('ar',  dot('  345')),
-    ('com', dot('  3  6')),
-    )
 
 def convert(line):
   '''
