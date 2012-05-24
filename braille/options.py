@@ -29,3 +29,9 @@ def opt(name, value=None):
     __option[name] = value
 
   return __option[name]
+
+def override(new_opts=None):
+  if not new_opts:
+    raise ValueError, 'new_opts should be a suitable dict object'
+
+  __option.update(new_opts)
