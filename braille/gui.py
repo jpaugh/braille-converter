@@ -5,8 +5,6 @@ from . import opt, convert, import_ruleset
 import wx
 import  wx.lib.filebrowsebutton as filebrowse
 
-debug = False
-
 class MyFrame(wx.Frame):
   def __init__(self, **kwargs):
     super(MyFrame, self).__init__(parent=None,
@@ -37,12 +35,13 @@ class InteractiveInput(wx.Panel):
 	0, wx.ALIGN_LEFT|wx.ALL)
     vSizer.Add(self.outText, 1, wx.GROW|wx.NORTH)
 
-    if debug:
+    if opt('debug'):
       #Add a logging window
       self.logger = OutputText(self)
       self.logger.write = lambda s: self.logger.AppendText(s)
+      self.logger.flush = lambda : None
       self.logger.resetText = lambda : self.logger.SetValue('')
-      braille.stderr = self.logger
+      opt('stderr', self.logger)
 
       #Add debug panel
       self.dpanel = DebugPanel(self)
@@ -55,9 +54,9 @@ class InteractiveInput(wx.Panel):
     self.SetSizerAndFit(vSizer)
 
   def onTyping(self, event):
-    if debug:
+    if opt('debug'):
       self.logger.resetText()
-    self.outText.SetValue(braille.convert(self.inText.GetValue()))
+    self.outText.SetValue(convert(self.inText.GetValue()))
 
 class InputText(wx.TextCtrl):
   def __init__(self, *args, **kwargs):
@@ -98,7 +97,7 @@ class DebugPanel(wx.Panel):
     diag = wx.Frame(parent=topLevel, size=(500,800),
 	title='Ruleset amer-2')
     diag.text = OutputText(diag)
-    diag.text.SetValue(format_ruleset(braille.import_ruleset('amer-2')))
+    diag.text.SetValue(format_ruleset(import_ruleset('amer-2')))
     diag.vSizer = wx.BoxSizer(wx.VERTICAL)
     diag.vSizer.Add(diag.text, 1, wx.GROW)
     diag.SetSizerAndFit(diag.vSizer)
