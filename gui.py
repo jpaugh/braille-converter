@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#gui - graphical interface to braille.py encoding=utf8
 import braille
 import wx
 import  wx.lib.filebrowsebutton as filebrowse
@@ -140,6 +142,7 @@ class FileInput(wx.Panel):
     print 'Clicked on %s, event: %s' % (event.GetId(), event)
     pass
 
-app = wx.App(False)
-MyFrame()
-app.MainLoop()
+if __name__ == '__main__':
+  app = wx.App(False)
+  topLevel = MyFrame()
+  app.MainLoop()
