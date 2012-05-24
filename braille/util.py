@@ -1,17 +1,16 @@
 #coding=utf8
-import sys
-import ds
 
-debug = True
-stderr = sys.stderr
+import ds
+from .options import opt
+
 
 def warn(msg):
   '''
   Give a warning to the user on stderr, if we're in debug mode
   '''
-  if debug:
-    print >>stderr, msg
-    sys.stderr.flush()
+  if opt('debug'):
+    print >>opt('stderr'), msg
+    opt('stderr').flush()
 
 
 def fwarn(cxt, msg):

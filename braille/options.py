@@ -9,12 +9,16 @@ WARNING: For this to work, every import of this module MUST use the same name:
 NOTE: This module may NOT rely on (import) other modules within the
 package.
 '''
+import sys
 
 #XXX Do NOT import this field! (use the accessor methods, below)
 __option = {
     'gui': True,
     'debug': False,
     'comp': True, #Currently a no-op
+    'stdin': sys.stdin,
+    'stdout': sys.stdout,
+    'stderr': sys.stderr,
     }
 
 def opt(name, value=None):
