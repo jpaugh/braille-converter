@@ -141,7 +141,7 @@ class FileInput(wx.Panel):
   def OnClick(self, event):
     print 'Clicked on %s, event: %s' % (event.GetId(), event)
     pass
-
+topLevel = None
 def __main__():
   app = wx.App(False)
   topLevel = MyFrame()
