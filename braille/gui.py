@@ -1,6 +1,7 @@
-#!/usr/bin/env python
-#gui - graphical interface to braille.py encoding=utf8
-import braille
+'''   coding=utf8
+Graphical interface to braille converter
+'''
+from . import opt, convert, import_ruleset
 import wx
 import  wx.lib.filebrowsebutton as filebrowse
 
