@@ -9,6 +9,10 @@ from util import fwarn, do_re, debug, gettype
 
 import os
 
+langdir = os.path.join(os.path.dirname(__file__), 'lang')
+if not os.path.isdir(langdir):
+  raise IOError('Cannot load lang files; unknown dir "%s"' % langdir)
+
 #Cache of imported rulesets, indexed by lang name
 ruleset = { }
 
@@ -49,7 +53,7 @@ def import_ruleset(lang='amer-2', comp=None, fresh=False):
     import_ruleset('standard')
 
   cxt = ds.Context()
-  cxt.fname = os.path.join('lang', lang)
+  cxt.fname = os.path.join(langdir, lang)
   cxt.lineno = 0
 
   try:
