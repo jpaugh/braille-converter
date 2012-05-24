@@ -2,3 +2,4 @@ TODO:
 - support for tracking exact pos in files for better diagnostics 
 - Add numerals and punctuation to standard lang -- if they're really
   standard.
+- fix imports: remove util.py's reliance on anything else.
