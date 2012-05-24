@@ -3,7 +3,7 @@ import sys
 
 import unittest
 
-feel_like_it = False
+debug = True
 
 class BrTestCase(unittest.TestCase):
   '''
@@ -18,7 +18,7 @@ class BrTestCase(unittest.TestCase):
 	print >> sys.stderr, pair
       else:
 	(prn, brl) = pair
-	if feel_like_it:
+	if debug:
 	  print >> sys.stderr, '  p <<%s>>' % prn
 	  print >> sys.stderr, '  e << %s >>' % brl.replace('', ' ')
 	  print >> sys.stderr, '  g << %s >>' % convert(prn).replace('', ' ')
