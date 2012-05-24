@@ -9,6 +9,8 @@ the rule they are translating. This prevents recursion problems, etc.
 import ds
 from .util import fwarn
 
+import re
+
 #Identity - useful for unimplemented translations
 ident = lambda r, c, w: w
 

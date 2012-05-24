@@ -1,9 +1,9 @@
-from braille import dots, convert
+from . import dots, convert
+from .options import opt
+
 import sys
 
 import unittest
-
-debug = True
 
 class BrTestCase(unittest.TestCase):
   '''
@@ -18,7 +18,7 @@ class BrTestCase(unittest.TestCase):
 	print >> sys.stderr, pair
       else:
 	(prn, brl) = pair
-	if debug:
+	if opt('debug'):
 	  print >> sys.stderr, '  p <<%s>>' % prn
 	  print >> sys.stderr, '  e << %s >>' % brl.replace('', ' ')
 	  print >> sys.stderr, '  g << %s >>' % convert(prn).replace('', ' ')

@@ -5,10 +5,10 @@ import sys, re
 
 version = (0, 1, 1, 2002, 'beta')
 
-import ds, util
+from . import ds, util
 from .lang import import_ruleset
 from .util import dots, gettype, warn, fwarn
-from brl import convert
+from .brl import convert
 
 
 

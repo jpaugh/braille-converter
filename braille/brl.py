@@ -2,8 +2,9 @@
 High level functions for translation of English text to Braille.
 '''
 
-import ds
 from .lang import import_ruleset
+from . import ds
+from .options import opt
 from .util import fwarn, do_re, gettype
 
 def _r_convert(line, lang='amer-2'):
@@ -32,7 +33,7 @@ def _r_convert(line, lang='amer-2'):
       rule = rules[i]
       oword = word
       word = gettype(rule, 'trans')(rule, cxt, word)
-      if not oword == word:
+      if opt('debug') and not oword == word:
 	fwarn(cxt, '%s --> %s by rule %d (%s)' % (oword, word, i, rule))
     return word
 

@@ -35,7 +35,5 @@ def try_dotify(cxt, rule):
 
 def prefix(cxt, rule):
   try_dotify(cxt, rule)
-  fwarn(cxt, 'brl: "%s"' % rule['brl'])
   rule['brl'] = rule['brl'].replace(' ', '')
-  fwarn(cxt, 'brl: "%s"' % rule['brl'])
 

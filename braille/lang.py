@@ -3,15 +3,16 @@ Functions that deal with lang files or rulesets
 '''
 
 from . import ds
+from .options import opt
+from . import comp as cpl
 from util import fwarn, do_re, debug, gettype
-import comp as cpl
 
 import os
 
 #Cache of imported rulesets, indexed by lang name
 ruleset = { }
 
-def import_ruleset(lang='amer-2', comp=(not debug), fresh=False):
+def import_ruleset(lang='amer-2', comp=None, fresh=False):
   '''
   loads the rules for the given language
 
@@ -21,10 +22,7 @@ def import_ruleset(lang='amer-2', comp=(not debug), fresh=False):
     This consists of solely of alphanumeric characters and hyphens.
 
   comp=True - Compile the ruleset to the most succint form (brl).
-    If debugging is turned on, this defaults False, making the rulesets
-    more legible.
-    If debugging is turned off, this defaults True, for quicker
-    translations.
+    The default is set by commandline-argument.
 
   fresh=False - Get a fresh version of the ruleset, from file, rather
   than relying on the cache. Defaults False.
@@ -40,6 +38,10 @@ def import_ruleset(lang='amer-2', comp=(not debug), fresh=False):
   #prefer cached version first
   if not fresh and lang in ruleset:
     return ruleset[lang]
+
+  #Set default comp
+  if comp == None:
+    comp = opt('comp')
 
   #Import standard (international) rules first
   if (not lang == 'standard' and
