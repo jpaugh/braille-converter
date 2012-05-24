@@ -14,8 +14,9 @@ cmdparser = ArgumentParser(description='Convert text to Braille')
 
 cmdparser.add_argument('-d', '--debug', action='store_true',
     help='turn on warnings and debug messages')
-cmdparser.add_argument('--tests', action='store_true',
-    help='run package tests, then exit')
+#TODO: run tests from cmdline args
+#cmdparser.add_argument('--tests', action='store_true',
+#    help='run package tests, then exit')
 cmdparser.add_argument('--version', action='version',
     version=verfmt % version,
     help='display the current version of the software.')
