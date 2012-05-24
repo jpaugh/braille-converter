@@ -2,10 +2,10 @@
 Functions that deal with lang files or rulesets
 '''
 
-from . import ds
+import ds
+import comp as cpl
 from .options import opt
-from . import comp as cpl
-from util import fwarn, do_re, debug, gettype
+from .util import fwarn, do_re, gettype
 
 import os
 
