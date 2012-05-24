@@ -4,6 +4,7 @@
 import sys, re
 
 stderr = sys.stderr
+debug = False
 
 version = (0, 1, 1, 2002, 'beta')
 
@@ -241,10 +242,11 @@ types = {
 
 def warn(msg):
   '''
-  Give a warning to the user on stderr
+  Give a warning to the user on stderr, if we're in debug mode
   '''
-  print >>stderr, msg
-  sys.stderr.flush()
+  if debug:
+    print >>stderr, msg
+    sys.stderr.flush()
 
 def fwarn(cxt, msg):
   '''

@@ -4,7 +4,7 @@ import braille
 import wx
 import  wx.lib.filebrowsebutton as filebrowse
 
-debug = True
+debug = False
 
 class MyFrame(wx.Frame):
   def __init__(self, **kwargs):
