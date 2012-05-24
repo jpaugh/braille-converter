@@ -12,6 +12,7 @@ package.
 
 #XXX Do NOT import this field! (use the accessor methods, below)
 __option = {
+    'gui': True,
     'debug': False,
     'comp': True, #Currently a no-op
     }

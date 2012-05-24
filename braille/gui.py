@@ -142,7 +142,10 @@ class FileInput(wx.Panel):
     print 'Clicked on %s, event: %s' % (event.GetId(), event)
     pass
 
-if __name__ == '__main__':
+def __main__():
   app = wx.App(False)
   topLevel = MyFrame()
   app.MainLoop()
+
+if __name__ == '__main__':
+  __main__()

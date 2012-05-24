@@ -1,7 +1,10 @@
 from . import *
 
 import sys
-if __name__ == '__main__':
+if opt('gui'):
+  from . import gui
+  gui.__main__()
+else:
   oline = ""
   while (True):
     line = sys.stdin.readline()
