@@ -54,9 +54,13 @@ run `brl.py` instead. Like so:
 
 (`$` represents the command prompt, and is not required.)
 
-Now, type in some text, and see how it handles it! Note that access to
-braille-converter from the terminal solely (without a gui at all) is in
-the works.
+If you'd like to run brl without the gui, then pass in the `--cmdline` option
+
+    $ python brl.py --cmdline
+
+Now, type in some text, and see how it handles it! If you have any
+problems or suggestions, don't hesitate to open an issue in the
+[issue tracker](https://github.com/jpaugh64/braille-converter/issues/).
 
 #How to open a terminal
 - Mac: Search in your utilities for a program called 'Terminal'
