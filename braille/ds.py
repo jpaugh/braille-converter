@@ -76,14 +76,14 @@ types = {
     'comp'  : comp.dotify,
     'trans' : trans.capital
     },
-  T.prefix  : {
+  T.abbrev  : {
     'order' :  6,
-    'comp'  : comp.prefix,
+    'comp'  : comp.ident,
     'trans' : trans.simple
     },
-  T.abbrev  : {
+  T.prefix  : {
     'order' :  7,
-    'comp'  : comp.ident,
+    'comp'  : comp.prefix,
     'trans' : trans.simple
     },
   T.wcell   : {

@@ -24,9 +24,7 @@ def wcell(rule, cxt, word):
   '''
   Only translate if it matches the whole word.
   '''
-  if word == rule['prn']:
-    return rule['brl']
-  return word
+  return ds.re.sub('\\b%s\\b' % rule['prn'], rule['brl'], word)
 
 def capital(rule, cxt, word):
   '''
