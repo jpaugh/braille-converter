@@ -31,11 +31,10 @@ args = cmdparser.parse_args()
 options.override(vars(args))
 
 if opt('tests'):
-  import unittest, os
+  import unittest
   import unittest.runner
-  root = os.path.dirname(os.path.dirname(__file__))
 
-  tests = unittest.defaultTestLoader.discover(root, pattern='test*.py')
+  tests = unittest.defaultTestLoader.discover('braille.tests', pattern='test*.py')
   runner = unittest.runner.TextTestRunner()
   runner.run(tests)
 

@@ -1,68 +1,13 @@
-from . import dots, convert
-from .options import opt
+from . import EBAETestCase, dots
 
-import sys
-
-import unittest
-
-class BrTestCase(unittest.TestCase):
-  '''
-  Gives an extra hook for DRY modifications
-  '''
-  pairs = ()
-  rule = 'X'
-
-  def test_rule(self):
-    for pair in self.pairs:
-      if type(pair) == str:
-	print >> sys.stderr, pair
-      else:
-	(prn, brl) = pair
-	if opt('debug'):
-	  print >> sys.stderr, '  p <<%s>>' % prn
-	  print >> sys.stderr, '  e << %s >>' % brl.replace('', ' ')
-	  print >> sys.stderr, '  g << %s >>' % convert(prn).replace('', ' ')
-	self.assertEqual(brl, convert(prn))
-
-  #Formatting strings
-  header =    'Rule %s: %s'
-  subheader = '     %s.%d: %s'
-  ssheader =  '     %s.%d.%s: %s'
-
-  def h(self, msg):
-    self.sh_, self.ss_ = 0, None
-    return self.header % (self.rule, msg)
-
-  def sh(self, msg, go=None):
-    if go:
-      self.sh_ = int(go)
-    else:
-      self.sh_ += 1
-    self.ss_ = None
-
-    return self.subheader % (self.rule, self.sh_, msg)
-
-  def ss(self, msg, go=None):
-    if go:
-      self.ss_ = str(go)
-    else:
-      if self.ss_:
-	self.ss_ = chr(ord(ss_) + 1)
-      else:
-	self.ss_ = 'a'
-
-    return self.ssheader % (self.rule, self.sh_, self.ss_, msg)
-
-
-class RuleI(BrTestCase):
+class RuleI(EBAETestCase):
   '''
   Punctuation Rules
   '''
   rule = 'I'
 
-  def __init__(self, *args, **kwargs):
-    super(BrTestCase, self).__init__(*args, **kwargs)
-    self.pairs = (
+  def pairs(self):
+    return (
 	self.h('Punctuation Signs'),
 	(',;:.!?/-', dots('2 23 25 256 235 236 34 36')),
 	("a'a", dots('1 3 1')),
