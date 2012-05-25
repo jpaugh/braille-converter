@@ -23,7 +23,7 @@ cmdparser.add_argument('--version', action='version',
 
 guiopt = cmdparser.add_mutually_exclusive_group()
 guiopt.add_argument('-gui', '--gui', action='store_true',
-    help='use the gui interface')
+    default=True, help='use the gui interface')
 guiopt.add_argument('-cmd', '--cmdline', action='store_false',
     dest='gui', help='use the command line interface')
 
