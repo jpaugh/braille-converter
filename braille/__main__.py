@@ -14,9 +14,6 @@ cmdparser = ArgumentParser(description='Convert text to Braille')
 
 cmdparser.add_argument('-d', '--debug', action='store_true',
     help='turn on warnings and debug messages')
-#TODO: run tests from cmdline args
-#cmdparser.add_argument('--tests', action='store_true',
-#    help='run package tests, then exit')
 cmdparser.add_argument('--version', action='version',
     version=verfmt % version,
     help='display the current version of the software.')
@@ -26,12 +23,22 @@ guiopt.add_argument('-gui', '--gui', action='store_true',
     default=True, help='use the gui interface')
 guiopt.add_argument('-cmd', '--cmdline', action='store_false',
     dest='gui', help='use the command line interface')
+guiopt.add_argument('--tests', action='store_true',
+    help='run package tests, then exit')
 
 args = cmdparser.parse_args()
 
 options.override(vars(args))
 
-if opt('gui'):
+if opt('tests'):
+  import unittest
+  import unittest.runner
+
+  tests = unittest.defaultTestLoader.discover('braille.tests', pattern='test*.py')
+  runner = unittest.runner.TextTestRunner()
+  runner.run(tests)
+
+elif opt('gui'):
   from . import gui
   gui.__main__()
 else:
