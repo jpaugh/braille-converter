@@ -1,0 +1,6 @@
+What's New?
+===========
+
+- --tests command line param
+- Some fixes, with regression tests
+- lang/ and tests/ moved inside braille/
