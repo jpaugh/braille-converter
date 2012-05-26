@@ -1,4 +1,4 @@
-from braille import convert, dots, log
+from braille import convert, dots, util
 from braille.options import opt
 import unittest
 
@@ -33,12 +33,12 @@ class BrTestCase(unittest.TestCase):
   def test_rule(self):
     for pair in self.pairs:
       if type(pair) == str:
-	log.info(pair)
+	util.log.info(pair)
       else:
 	(prn, brl) = pair
-	log.debug('  p <<%s>>' % prn)
-	log.debug('  e << %s >>' % brl.replace('', ' '))
-	log.debug('  g << %s >>' % convert(prn).replace('', ' '))
+	util.log.debug('  p <<%s>>' % prn)
+	util.log.debug('  e << %s >>' % brl.replace('', ' '))
+	util.log.debug('  g << %s >>' % convert(prn).replace('', ' '))
 	self.assertEqual(brl, convert(prn))
 
 class EBAETestCase(BrTestCase):

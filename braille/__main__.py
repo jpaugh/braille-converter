@@ -64,15 +64,6 @@ argspec = [
 	'description': 'Convert text to Braille',
 	},
       'group': [	  #List of arguments to add to parser
-	{   #Args to parser.add_argument()
-	  'args' : [ '-d', '--debug' ],
-	  'kwargs': {
-	    'action': 'store_const',
-	    'dest': 'loglevel',
-	    'const': 'DEBUG',
-	    'help': 'same as --log DEBUG',
-	    },
-	  },
 	{
 	  'args': [ '--version' ],
 	  'kwargs': {
@@ -90,6 +81,15 @@ argspec = [
 	    'help': 'change the log level. Values for LEVEL are CRITICAL, ERROR, WARNING, INFO, and DEBUG. The default is WARNING.',
 	    },
 	},
+	{   #Args to parser.add_argument()
+	  'args' : [ '-d', '--debug' ],
+	  'kwargs': {
+	    'action': 'store_const',
+	    'dest': 'loglevel',
+	    'const': ['DEBUG'],
+	    'help': 'same as --log DEBUG',
+	    },
+	  },
 	],
       },
     { # mutually exclusive group
@@ -117,7 +117,7 @@ argspec = [
 	  'args': ['--tests', ],
 	  'kwargs': {
 	    'action': 'store_true',
-	    'help': 'run package tests, then exit'
+	    'help': 'run package tests, then exit; implies --log INFO'
 	    },
 	  },
 	],
@@ -127,16 +127,17 @@ argspec = [
 cmdparser = argparseFactory(argspec)
 args = cmdparser.parse_args()
 
-if getattr(args, 'loglevel', None):
-  args.loglevel = args.loglevel.upper()
+if args.loglevel:
+  args.loglevel = args.loglevel[-1].upper()
 else:
   if args.tests:
     args.loglevel = 'INFO'
   else:
     args.loglevel='WARNING'
+util.log.setLogLevel(args.loglevel)
 
 if args.loglevel == 'DEBUG':
-  args.debug = True
+  opt('debug', True)
 
 options.override(vars(args))
 

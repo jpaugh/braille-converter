@@ -6,11 +6,11 @@ from .options import opt
 import logging
 import logging.config
 
-def warn(msg):
+def warn(*msg):
   '''
   Give a warning to the user on stderr, if we're in debug mode
   '''
-  log.warn(msg)
+  log.warn(*msg)
   log.debug('use of util.warn is deprecated')
 
 
@@ -94,7 +94,7 @@ class LogProxy(object):
       'formatters': {
 	'simple': {
 	  'format':
-	  '[%(asctime)s] $(name) - %(levelname)s - %(message)s',
+	  '[%(asctime)s] %(name)s:%(levelname)s:%(message)s',
 	  },
 	},
       'handlers': {
@@ -114,11 +114,13 @@ class LogProxy(object):
 	},
       }
 
+
   def changeLogger(self, name='braille'):
     if name in self.default_logging_config['loggers']:
       opt('logger', logging.getLogger(name))
     else:
       self.debug('unknown logger: %s', name)
+
 
   def setupLogger(self, lvl=None):
     logging.config.dictConfig(self.default_logging_config)
@@ -127,7 +129,8 @@ class LogProxy(object):
       self.setLogLevel(lvl)
     return opt('logger')
 
-  def setLogLevel(level):
+
+  def setLogLevel(self, level):
     '''
     Only takes effect the first time it is called.
     '''
@@ -139,6 +142,24 @@ class LogProxy(object):
     else:
       opt('logger').setLevel(nlvl)
 
+
+  def replaceHandlerStream(self, stream=None):
+    '''
+    Replace the stream that the underlying stream handler uses. This has
+    no safety, so it is a bad idea! :-) But, on the other hand, even
+    non-stream objects that support write() and flush() can be used.
+    '''
+    if not stream:
+      stream = opt('stderr')
+
+    logger = opt('logger')
+
+    for handler in logger.handlers:
+      if type(handler) == logging.StreamHandler:
+	handler.stream = stream
+
+
+  #Proxy methods
   def debug(self, *args, **kwargs):
     opt('logger').debug(*args, **kwargs)
     pass
