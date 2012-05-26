@@ -1,7 +1,7 @@
 '''   coding=utf8
 Graphical interface to braille converter
 '''
-from . import opt, convert, import_ruleset
+from . import util, opt, convert, import_ruleset
 import wx
 import  wx.lib.filebrowsebutton as filebrowse
 
@@ -41,7 +41,7 @@ class InteractiveInput(wx.Panel):
       self.logger.write = lambda s: self.logger.AppendText(s)
       self.logger.flush = lambda : None
       self.logger.resetText = lambda : self.logger.SetValue('')
-      opt('stderr', self.logger)
+      util.log.replaceHandlerStream(self.logger)
 
       #Add debug panel
       self.dpanel = DebugPanel(self)

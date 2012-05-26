@@ -1,0 +1,9 @@
+What's New?
+===========
+
+- --tests command line param
+- logging facility (--log LEVEL)
+- Some fixes, with regression tests
+- lang/ and tests/ moved inside braille/
+- argument parser factory (yay!)
+- renamed bin/brl.py ==> bin/brl

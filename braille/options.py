@@ -19,6 +19,7 @@ __option = {
     'stdin': sys.stdin,
     'stdout': sys.stdout,
     'stderr': sys.stderr,
+    'logger': None,
     }
 
 def opt(name, value=None):
