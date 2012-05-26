@@ -1,5 +1,8 @@
 from . import *
 
+#NOTE: Do this early
+util.log.setupLogger()
+
 import sys
 from argparse import ArgumentParser
 
@@ -27,6 +30,17 @@ guiopt.add_argument('--tests', action='store_true',
     help='run package tests, then exit')
 
 args = cmdparser.parse_args()
+
+if getattr(args, 'loglevel', None):
+  args.loglevel = args.loglevel.upper()
+else:
+  if args.tests:
+    args.loglevel = 'INFO'
+  else:
+    args.loglevel='WARNING'
+
+if args.loglevel == 'DEBUG':
+  args.debug = True
 
 options.override(vars(args))
 

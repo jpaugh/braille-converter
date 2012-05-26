@@ -3,21 +3,22 @@
 import ds
 from .options import opt
 
+import logging
+import logging.config
 
 def warn(msg):
   '''
   Give a warning to the user on stderr, if we're in debug mode
   '''
-  if opt('debug'):
-    print >>opt('stderr'), msg
-    opt('stderr').flush()
+  log.warn(msg)
+  log.debug('use of util.warn is deprecated')
 
 
 def fwarn(cxt, msg):
   '''
   Give a warning with file context information.
   '''
-  warn('%s/%d: %s' % (cxt.fname, cxt.lineno, msg))
+  log.warn('%s/%d: %s' % (cxt.fname, cxt.lineno, msg))
 
 
 def do_re(reg, s):
@@ -83,4 +84,86 @@ def __dot(s):
       num |= 2**(n-1)
 
   return unichr(num)
+
+class LogProxy(object):
+  '''
+  logs messages to the current logger
+  '''
+  default_logging_config = {
+      'version':1,
+      'formatters': {
+	'simple': {
+	  'format':
+	  '[%(asctime)s] $(name) - %(levelname)s - %(message)s',
+	  },
+	},
+      'handlers': {
+	'console': {
+	  'class': 'logging.StreamHandler',
+	  'level': 'DEBUG',
+	  'formatter': 'simple',
+	  'stream': 'ext://sys.stderr',
+	  },
+	},
+      'loggers': {
+	'braille': {
+	  'level': 'WARNING',
+	  'handlers': ['console',],
+	  'propagate': 'yes',
+	  },
+	},
+      }
+
+  def changeLogger(self, name='braille'):
+    if name in self.default_logging_config['loggers']:
+      opt('logger', logging.getLogger(name))
+    else:
+      self.debug('unknown logger: %s', name)
+
+  def setupLogger(self, lvl=None):
+    logging.config.dictConfig(self.default_logging_config)
+    self.changeLogger()
+    if lvl:
+      self.setLogLevel(lvl)
+    return opt('logger')
+
+  def setLogLevel(level):
+    '''
+    Only takes effect the first time it is called.
+    '''
+    if type(level) == str:
+      nlvl = getattr(logging, level.upper(), None)
+
+    if not type(nlvl) == int:
+      warn('Invalid log level: %s' % level)
+    else:
+      opt('logger').setLevel(nlvl)
+
+  def debug(self, *args, **kwargs):
+    opt('logger').debug(*args, **kwargs)
+    pass
+
+  def info(self, *args, **kwargs):
+    opt('logger').info(*args, **kwargs)
+    pass
+
+  def warn(self, *args, **kwargs):
+    self.warning(*args, **kwargs)
+
+  def warning(self, *args, **kwargs):
+    opt('logger').warning(*args, **kwargs)
+    pass
+
+  def error(self, *args, **kwargs):
+    opt('logger').error(*args, **kwargs)
+    pass
+
+  def exception(self, *args, **kwargs):
+    opt('logger').exception(*args, **kwargs)
+    pass
+
+  def log(self, *args, **kwargs):
+    opt('logger').log(*args, **kwargs)
+    pass
+log=LogProxy()
 
