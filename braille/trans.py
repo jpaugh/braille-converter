@@ -45,7 +45,10 @@ def number(rule, cxt, word):
   def repl(match):
     '''
     Prepend number mark and replace digits 1-9,0 with letters a-j
+
+    This is according to the international standard, so it is invariable.
     '''
+
     word = match.group().split('')
     for i in xrange(word):
       l = word[i]

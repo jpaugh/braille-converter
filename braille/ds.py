@@ -21,6 +21,7 @@ class T:
   char = 'char'
   cluster = 'cluster'
   decimal = 'decimal'
+  digit = 'digit'
   epunct = 'epunct'
   italic = 'italic'
   letter = 'letter'
@@ -96,7 +97,7 @@ types = {
       'comp' : comp.dotify,
       'trans' : trans.simple
       },
-  T.number  : {
+  T.digit  : {
       'order' : 10,
       'comp' : comp.dotify,
       'trans' : trans.number
@@ -175,7 +176,7 @@ class patt:
   capword = re.compile('\\b[A-Z-][A-Z-]+\\b')
 
   #number
-  number = re.compile('(?:[0-9]*\\.)[0-9]+')
+  number = re.compile('(?:[0-9]*\\.)[0-9]+(?:\\-?[a-zA-Z])?')
 
   #letter preceeded by a number
   letter = re.compile('([0-9])([a-zA-Z])')

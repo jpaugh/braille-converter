@@ -13,7 +13,6 @@
 #These symbols each have their own TYPE
 # most don't correspond to any print text
 nonlatin '' '5'
-number '' '3456'
 accent '' '4'
 italic '' '46'
 decimal '.' '46' #decimal point
