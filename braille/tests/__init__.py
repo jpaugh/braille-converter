@@ -36,6 +36,7 @@ class BrTestCase(unittest.TestCase):
 	util.log.warn(pair)
       else:
 	(prn, brl) = pair
+	brl=dots(brl)
 	util.log.info('  p <<%s>>' % prn)
 	util.log.info('  e << %s >>' % brl.replace('', ' '))
 	util.log.info('  g << %s >>' % convert(prn).replace('', ' '))
