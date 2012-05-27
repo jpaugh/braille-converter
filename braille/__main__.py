@@ -130,9 +130,6 @@ args = cmdparser.parse_args()
 if args.loglevel:
   args.loglevel = args.loglevel[-1].upper()
 else:
-  if args.tests:
-    args.loglevel = 'INFO'
-  else:
     args.loglevel='WARNING'
 util.log.setLogLevel(args.loglevel)
 

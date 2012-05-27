@@ -33,12 +33,12 @@ class BrTestCase(unittest.TestCase):
   def test_rule(self):
     for pair in self.pairs:
       if type(pair) == str:
-	util.log.info(pair)
+	util.log.warn(pair)
       else:
 	(prn, brl) = pair
-	util.log.debug('  p <<%s>>' % prn)
-	util.log.debug('  e << %s >>' % brl.replace('', ' '))
-	util.log.debug('  g << %s >>' % convert(prn).replace('', ' '))
+	util.log.info('  p <<%s>>' % prn)
+	util.log.info('  e << %s >>' % brl.replace('', ' '))
+	util.log.info('  g << %s >>' % convert(prn).replace('', ' '))
 	self.assertEqual(brl, convert(prn))
 
 class EBAETestCase(BrTestCase):
