@@ -100,7 +100,7 @@ class EBAETestCase(BrTestCase):
       self._ss = str(go)
     else:
       if self._ss:
-	self._ss = chr(ord(_ss) + 1)
+	self._ss = chr(ord(self._ss) + 1)
       else:
 	self._ss = 'a'
 
