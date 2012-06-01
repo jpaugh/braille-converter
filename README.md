@@ -4,9 +4,12 @@ braille-converter is a program that converts English text to Fully
 Contracted (Grade 2) Braille. Aims to account for every rule that does
 not rely on semantic analysis, and even a few that do, but can be
 roughly approximated.  Does not use BRF or any exotic format. It simply
-uses the Braille code-points of Unicode.
+uses the Braille code-points of Unicode. We're targeting the 2002
+revision of *English Braille:Amerian Edition*, released by the Braille
+Authority of North America. Right now, we have support for Rule I of
+this document, and plan to support the other rules in future releases.
 
-# What's it for?
+### What's it for?
 
 This program is designed to aid Braille transcribers, by freeing them
 from manually transcribing a document. It's output must still be edited
@@ -14,9 +17,9 @@ from manually transcribing a document. It's output must still be edited
 the document's meaning and style). For this reason, usability is a major
 aim of the project. braille-converter already has a graphical interface,
 appropriate for transcribing shorter documents or notes. (Support for
-large documents and file processing of files is in the works).
+large documents and batch processing of files is in the works).
 
-# What's the difference between this program and online Braille converter X?
+### What's the difference between this program and online Braille converter X?
 
 Many of the Braille converters online use what is called Grade 1
 Braille, which consists of the alphabetical characters, and maybe some
@@ -27,86 +30,115 @@ is much slower than reading by sight.
 
 braille-converter supports Grade 2 Braille, in a limited form which will
 improve as the project progresses. It is already very usable, and aims
-to support advanced features--I bet you won't find better handling of
-single quotes and apostrophes! By the way, it uses American English
-Braille, and is coded according to the 2002 *English Braille: American
-Edition* released by the *Braille Authority of North America*.
+to support tricky features, including proper quote and apostrophe
+handling for most cases.
 
-# How to use
+## How to use
 
-Download the repository as a
-[zip file](https://github.com/jpaugh64/braille-converter/zipball/master),
-then unzip it and navigate the `bin/` sub directory. run `brl.py`.
+Download the latest version from the
+[downloads](https://github.com/jpaugh64/braille-converter/downloads)
+page, then unzip it and navigate the `bin/` sub directory. run `brl.py`.
 Double-clicking it should work, but if not, follow the commandline
 instructions below.
 
 Having difficulty? Please let me know! Drop me a line on the [issue
-tracker](https://github.com/jpaugh64/braille-converter/issues/): Enjoy!
+tracker](https://github.com/jpaugh64/braille-converter/issues/). Enjoy!
 
-# How to use from the command line
+### How to use from the command line
 
 Just download and unzip the file as above, but instead open a terminal,
 navigate to the unzipped folder, and into the `bin/` subdirectory. Then
 run `brl.py` instead. Like so:
 
-    $ cd Downloads/jpaugh64-braille-converter-xxxxxx/bin
-    $ python brl.py
-
-(`$` represents the command prompt, and is not required.)
+    $ cd Downloads/braille_converter-x.x.YYYY/bin
+    $ ./brl
 
 If you'd like to run brl without the gui, then pass in the `--cmdline` option
 
-    $ python brl.py --cmdline
+    $ ./brl --cmdline
+
+On Windows, the commands are slightly different:
+
+    > cd Downloads\braille_converter-x.x.YYYY\bin
+    > brl
+
+or perhaps
+
+    > brl --cmdline
 
 Now, type in some text, and see how it handles it! If you have any
 problems or suggestions, don't hesitate to open an issue in the
 [issue tracker](https://github.com/jpaugh64/braille-converter/issues/).
+Please make sure to tell me which version you were using.
 
-#How to open a terminal
+###How to open a terminal
 - Mac: Search in your utilities for a program called 'Terminal'
 - Windows: In the Start Menu, seach for a program called 'cmd'.
-- Linux: Press `Ctrl+Alt+F1` and log in. :-p
+- Gnome: Press <kbd>Alt</kbd>+<kbd>F2</kbd> and type `gnome-terminal`, then
+  press <kbd>Enter</kbd>
+- Other Linux: Open xterm, or press <kbd>Ctrl</kbd><kbd>Alt</kbd>+<kbd>F1</kbd>
+  and log in.
 
-#Installation requirements
+##Installation requirements
 
-- Python (2.7 has been tested)
+- Python (2.7 has been tested; 3.x is unfortunately unsupported)
 - Any operating system
 - Minimum specs: Runs fine on my little netbook.
 
-You can get easily get a copy of Python for your operating system. visit
-www.python.org, and navigate to the download page, which has versions
-for Windows, Mac, and Linux. Download and install a "precompiled binary"
-for the least hassle.
+To get a copy of Python, visit www.python.org and click on the
+"Downloads" tab at the side. Under that, choose your operating system,
+or if you wish, compile it from source. 
 
-#Python Developers
+###For Mac
+Macs have Python pre-installed, but usually that version is quite
+outdated. For now, this module does not support any Python older than
+2.7 (the current release), so you may need to get that version. To do
+so, follow the generic instructions above.
+
+###For Linux/BSD
+Most likely, your package manager supplies a pre-compiled package for
+python. On Ubuntu, the command to install it is
+
+    $ sudo apt-get install python2.7
+
+###For Windows
+The installers at www.python.org are the best way to go. Follow the
+generic instructions above.
+
+##Python Developers
 
 This program is also a package, with some handy functions inside:
 
 - `convert` - This is the workhorse. Input a line of text, and receive
   the Braille text in return
 - `dots` - Convert a string of "dots" to Braille cells. (See below.)
-- `dot` - Convert a dot string for a _single cell_ to Braille
 - `opt` - Mungles options that affect the behavior of the whole package.
 
 Planned developments include parsing files en-masse, rather than
-line-at-a-type, and a class-based api.
+line-at-a-time, and a class-based api.
 
 So, `import braille` for `5 * 'fun'`.
 
-##What are dots?
+###What are dots?
 
-Dots is a notation often used to succinctly describe Braille cells
-without having to print them. Braille cells consist 6 dots, arranged in
-a 3x2 grid pattern, which allows them to be easily numbered. For
-example, the dots pattern "1235" represents the Braille cell ⠗ which
-stands for the letter *r*.
+Dots is a notation often used to succinctly describe Braille cells in
+normal ASCII. Braille cells consist 6 dots, arranged in a 3x2 grid
+pattern, which allows them to be easily numbered. For example, the dots
+pattern "1235" represents the Braille cell ⠗ which stands for the letter
+*r*.
 
-In the internals of my module, I used the dot notation to avoid
-repeating Ctl+Shift+u28xx and the uncomfortable hexadecimal math of the
-codepoints--which for Braille follows a nice, regular pattern that makes
-said math possible. Whenever I need multiple dots at a time, I string
-them together with intervening spaces, like this: `dots('123 123 1 134
-1')` which outputs `'⠇⠇⠁⠍⠁'` (llama). If I need to output a string with
-embedded spaces, I simply double the spaces, like so: `dots('6 13   24
-234  1234 246 12456 235')`, which outputs `'⠠⠅ ⠊⠎ ⠏⠪⠻⠖'` (Knowledge is
-power!)
+In the internals of the module, you'll see the dot notation used to
+avoid repeating Ctl+Shift+u28xx and the uncomfortable hexadecimal math
+of the codepoints--which for Braille follows a nice, regular pattern
+that makes said math possible. The digits describing each Braille cell
+(character) must be separated by a single space, like this:
+
+    dots('123 123 1 134 1')
+
+whose return value is `'⠇⠇⠁⠍⠁'` (llama). To include spaces in the
+returned string (for example, to Braille several words together), use an
+an extra space between the dots fooutputs r each space you wish to return.
+
+    dots('6 13   24 234  1234 246 12456 235')
+
+Which becomes `'⠠⠅ ⠊⠎ ⠏⠪⠻⠖'` (Knowledge is power!)

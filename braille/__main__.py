@@ -10,7 +10,7 @@ if version[0] == 0:
   #dev version: 0, major, minor, year, tag
   verfmt = '%d.%d.%d:%d-%s'
 else:
-  #release version: year, major, minor
+  #release version: major, minor, year
   verfmt = '%d.%d.%d'
 
 def argparseFactory(argspec):

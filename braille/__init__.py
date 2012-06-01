@@ -7,7 +7,7 @@ Convert text to braille
 
 import sys, re
 
-version = (0, 1, 3, 2002, 'beta')
+version = (1, 3, 2002)
 
 import ds, util, options
 from .lang import import_ruleset
