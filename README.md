@@ -142,3 +142,9 @@ an extra space between the dots fooutputs r each space you wish to return.
     dots('6 13   24 234  1234 246 12456 235')
 
 Which becomes `'⠠⠅ ⠊⠎ ⠏⠪⠻⠖'` (Knowledge is power!)
+
+## License
+
+Copyright 2012 Jonathan Paugh. MIT style license. See [COPYING][1] for
+details.
+[1]: https://github.com/braille-converter/blob/master/COPYING

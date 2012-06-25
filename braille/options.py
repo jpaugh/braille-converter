@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 '''
 Package-wide settings defined all in one place.
 

@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 '''
 High level functions for translation of English text to Braille.
 '''

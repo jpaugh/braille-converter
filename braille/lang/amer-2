@@ -1,4 +1,6 @@
 #Name American Braille Grade 2
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 
 #TYPE PRN BRL [PRIORITY]
 #PRIORITY defaults to 1

@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 '''
 functions used to perform the actual text substitution in order to
 convert a text to Braille. These functions may operate on the Source

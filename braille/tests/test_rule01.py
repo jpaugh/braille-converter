@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 from . import EBAETestCase, dots
 
 class RuleI(EBAETestCase):

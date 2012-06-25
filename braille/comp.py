@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 '''
 functions used to compile brl expressions into their final form. This is
 needed because the lang files don't use Braille at all! They use latin

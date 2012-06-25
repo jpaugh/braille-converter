@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 from braille import convert, dots, util
 from braille.options import opt
 import unittest

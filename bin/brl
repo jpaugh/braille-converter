@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # start braile-converter
+#
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 
 import os, sys
 

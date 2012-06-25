@@ -1,3 +1,5 @@
+# Copyright 2012 Jonathan Paugh
+# See COPYING for license details
 '''
 Functions that deal with lang files or rulesets
 '''
