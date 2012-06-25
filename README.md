@@ -147,4 +147,4 @@ Which becomes `'⠠⠅ ⠊⠎ ⠏⠪⠻⠖'` (Knowledge is power!)
 
 Copyright 2012 Jonathan Paugh. MIT style license. See [COPYING][1] for
 details.
-[1]: https://github.com/braille-converter/blob/master/COPYING
+[1]: https://github.com/jpaugh64/braille-converter/blob/master/COPYING
