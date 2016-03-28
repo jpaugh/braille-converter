@@ -9,6 +9,12 @@ revision of *English Braille:Amerian Edition*, released by the Braille
 Authority of North America. Right now, we have support for Rule I of
 this document, and plan to support the other rules in future releases.
 
+## Note
+
+This is an old project, and has not been actively developed for a while; the Braille standard it targets (English Braille:American Edition) has since been deprecated by [Unified English Braille (UEB)][UEB], which is pretty different in some cases.
+
+[UEB]: http://www.brailleauthority.org/ueb.html
+
 ### What's it for?
 
 This program is designed to aid Braille transcribers, by freeing them
